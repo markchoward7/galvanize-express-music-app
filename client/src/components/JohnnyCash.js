@@ -50,13 +50,13 @@ const JohnnyCash = () => {
   const [cashList, setcashList] = useState("");
 
   let callcashList = (artistName) => {
-    fetch(`http://localhost:9000/songs?artist=${artistName}`)
+    fetch(`http://localhost:9000/70936`)
       .then((res) => res.text())
       .then((res) => setcashList(res));
   };
 
   useEffect(() => {
-    callcashList("Johnny Cash");
+    callcashList();
   }, []);
 
   // END FETCH DATA SECTION

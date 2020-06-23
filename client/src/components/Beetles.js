@@ -15,8 +15,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 500,
-    minWidth: 400,
+    minWidth: 500,
+    maxWidth: 700,
   },
   media: {
     height: 0,
@@ -47,16 +47,17 @@ const Beetles = () => {
 
   // FETCH DATA SECTION + UPDATE STATE
 
-  const [beetlesList, setbeetlesList] = useState("");
+  const [beetlesList, setbeetlesList] = useState(null);
 
   let callbeetlesList = (artistName) => {
-    fetch(`http://localhost:9000/songs?artist=${artistName}`)
+    fetch(`http://localhost:9000/136975`)
       .then((res) => res.text())
-      .then((res) => setbeetlesList(res));
+      // .then(res => console.log(Array.isArray(JSON.parse(res))))
+      .then((res) => setbeetlesList(JSON.parse(res)));
   };
 
   useEffect(() => {
-    callbeetlesList('The+Beatles');
+    callbeetlesList();
   }, []);
 
   // END FETCH DATA SECTION
@@ -96,7 +97,15 @@ const Beetles = () => {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>{beetlesList}</Typography>
+            <Typography paragraph>
+              {Array.isArray(beetlesList) && beetlesList.map((ele) => (
+                <div>
+                  <b>Album Name: </b>
+                  {ele.albumName}, <b>ID: </b>
+                  {ele.albumId}
+                </div>
+              ))}
+            </Typography>
           </CardContent>
         </Collapse>
       </Card>
