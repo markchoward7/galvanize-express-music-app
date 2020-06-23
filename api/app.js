@@ -73,7 +73,7 @@ app.get('/', (req, res) => {
   res.send(JSON.stringify(returnData))
 })
 
-app.get('/:artistId', (req, res) => {
+app.get('/lookup/:artistId', (req, res) => {
   returnData = []
   for (const artist of musicData) {
     if (artist.artistId === Number(req.params.artistId)) {
@@ -90,7 +90,7 @@ app.get('/:artistId', (req, res) => {
   res.send(JSON.stringify(returnData))
 })
 
-app.get('/:artistId/:albumId', (req, res) => {
+app.get('/lookup/:artistId/:albumId', (req, res) => {
     returnData = []
     for (const artist of musicData) {
       if (artist.artistId === Number(req.params.artistId)) {
@@ -111,7 +111,7 @@ app.get('/:artistId/:albumId', (req, res) => {
     res.send(JSON.stringify(returnData))
 })
 
-app.get('/:artistId/:albumId/:songId', (req, res) => {
+app.get('/lookup/:artistId/:albumId/:songId', (req, res) => {
     returnData = []
     for (const artist of musicData) {
       if (artist.artistId === Number(req.params.artistId)) {
@@ -140,11 +140,9 @@ app.get('/songs', (req, res) => {
   let songName = req.query.song
   let albumName = req.query.album
   let artistName = req.query.artist
-  console.log(req)
   returnData = []
   if (songName || albumName || artistName) {
     if (songName) {
-      songName = songName.replace("+", " ")
       for (const artist of musicData) {
         for (const album of artist.albums) {
           for (const song of album.songs) {
@@ -160,7 +158,6 @@ app.get('/songs', (req, res) => {
       }
     }
     else if (albumName) {
-      albumName = albumName.replace("+", " ")
       for (const artist of musicData) {
         for (const album of artist.albums) {
           if (album.albumName === albumName) {
@@ -176,7 +173,6 @@ app.get('/songs', (req, res) => {
       }
     }
     else {
-      artistName = artistName.replace("+", " ")
       for (const artist of musicData) {
         if (artist.artistName === artistName) {
           for (const album of artist.albums) {
@@ -243,4 +239,4 @@ app.delete('/:artistID/:albumID/:songID', (req, res) => {
     res.send(200)
 })
 
-module.exports = app;
+app.listen(3000)
