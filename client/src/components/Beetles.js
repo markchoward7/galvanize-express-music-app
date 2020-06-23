@@ -62,21 +62,26 @@ const Beetles = () => {
   // END FETCH DATA SECTION
 
   return (
-    <Box style={{ display: "flex", justifyContent: "center", marginBottom:"1rem" }}>
+    <Box
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: "1rem",
+      }}
+    >
       <Card className={classes.root}>
-        <CardHeader title="Artist Name Here" subheader="Data Here" />
+        <CardHeader title="The Beatles" subheader="Data Here" />
         <CardMedia
           className={classes.media}
           image="LINK_TO_IMAGE"
           title="Album Title Here"
         />
-        {/* <CardContent>
+        <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
+            “You may say I'm a dreamer, but I'm not the only one. I hope someday
+            you'll join us. And the world will live as one.” ― John Lennon
           </Typography>
-        </CardContent> */}
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton
             className={clsx(classes.expand, {
@@ -91,9 +96,7 @@ const Beetles = () => {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>
-                {beetlesList}
-                </Typography>
+            <Typography paragraph>{beetlesList}</Typography>
           </CardContent>
         </Collapse>
       </Card>
