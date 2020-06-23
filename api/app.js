@@ -60,10 +60,8 @@ app.use(function(err, req, res, next) {
     }
 */
 
-console.log("hit")
-
 app.get('/', (req, res) => {
-    // return [{artist1.name: url-to-albums}, {artist2.name: url-to-albums}]
+    // return [{artist1.name: url-to-artist}, {artist2.name: url-to-artist}]
 })
 
 app.get('/:artistId', (req, res) => {
