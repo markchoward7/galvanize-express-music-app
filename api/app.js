@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
 
+var data = require("./data.json")
+
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 // var testAPIRouter = require("./routes/testAPI");
@@ -42,46 +44,183 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-/*
-    song object structure
-    {
-        "artistId": artistId,
-        "collectionId": albumId,
-        "trackId": songId,
-        "artistName": artistName,
-        "collectionName": albumName,
-        "trackName": songName,
-        "artistViewUrl": url-to-artist,
-        "collectionViewUrl": url-to-album,
-        "trackViewUrl": url-to-song,
-        "previewUrl": url-to-preview,
-        "artworkUrl60": url-to-small-artwork,
-        "artworkUrl100": url-to-large-artwork
+var musicData = []
+fetch("https://itunes.apple.com/search?term=the+beatles").then(response => response.json()).then(data => {
+  musicData.push({
+    artistName: data.results[0].artistName,
+    artistId: data.results[0].artistId,
+    albums: []
+  })
+})
+fetch("https://itunes.apple.com/search?term=johnny+cash").then(response => response.json()).then(data => {
+  musicData.push({
+    artistName: data.results[0].artistName,
+    artistId: data.results[0].artistId,
+    albums: []
+  })
+})
+for (const artist of musicData) {
+  fetch(`https://itunes.apple.com/lookup?id=${artist.artistId}&entity=album`).then(response => response.json().then(data => {
+    for (const album of data.results.slice(1)) {
+      artist.albums.push({
+        albumName: album.collectionName,
+        albumId: album.collectionId,
+        artworkUrl: album.artworkUrl100,
+        songs: []
+      })
     }
-*/
+  }))
+  for (const album of artist.albums) {
+    fetch(`https://itunes.apple.com/search?attribute=albumTerm&term=${album.collectionName.replace(' ', '+')}&entity=song`).then(response => response.json()).then(data => {
+      for (const song of data.results) {
+        album.songs.push({
+          songName: song.trackName,
+          songId: song.trackId,
+          previewUrl: song.previewUrl
+        })
+      }
+    })
+  }
+}
 
 app.get('/', (req, res) => {
-    // return [{artist1.name: url-to-artist}, {artist2.name: url-to-artist}]
+  returnData = []
+  for (const artist of musicData) {
+    returnData.push({
+      artistName: artist.artistName,
+      artistId: artist.artistId
+    })
+  }
+  res.send(json.stringify(returnData))
 })
 
 app.get('/:artistId', (req, res) => {
-    // return [{album1.name: url-to-album}, {album2.name: url-to-album}]
+  returnData = []
+  for (const artist of musicData) {
+    if (artist.artistId === req.params.artistId) {
+      for (const album of artist.albums) {
+        returnData.push({
+          albumName: album.albumName,
+          albumId: album.albumId,
+          artworkUrl: album.artworkUrl100
+        })
+      }
+      break
+    }
+  }
+  res.send(json.stringify(returnData))
 })
 
 app.get('/:artistId/:albumId', (req, res) => {
-    // return [{song1.name: url-to-song}, {song2.name: url-to-song}]
+    returnData = []
+    for (const artist of musicData) {
+      if (artist.artistId === req.params.artistId) {
+        for (const album of artist.albums) {
+          if (album.albumId === req.params.albumId) {
+            for (const song of album.songs) {
+              returnData.push({
+                songName: song.songName,
+                songId: song.songId
+              })
+            }
+            break
+          }
+        }
+        break
+      }
+    }
+    res.send(json.stringify(returnData))
 })
 
 app.get('/:artistId/:albumId/:songId', (req, res) => {
-    // return {name: song-name, etc.}
+    returnData = []
+    for (const artist of musicData) {
+      if (artist.artistId === req.params.artistId) {
+        for (const album of artist.albums) {
+          if (album.albumId === req.params.albumId) {
+            for (const song of album.songs) {
+              if (song.songId === req.params.songId) {
+                returnData.push({
+                  songName: song.songName,
+                  songId: song.songId,
+                  previewUrl: song.previewUrl
+                })
+                break
+              }
+            }
+            break
+          }
+        }
+        break
+      }
+    }
+    res.send(json.stringify(returnData))
 })
 
 app.get('/songs', (req, res) => {
-    // query params
-        // song=    return {name: song-name, etc.}
-        // album=   return [{song1.name: url-to-song}, {song2.name: url-to-song}] 
-        // artist=  return [{song1.name: url-to-song}, {song2.name: url-to-song}] 
-    // return [{song1.name: url-to-song}, {song2.name: url-to-song}]
+  let songName = req.query.song
+  let albumName = req.query.album
+  let artistName = req.query.artist
+  returnData = []
+  if (songName || albumName || artistName) {
+    if (songName) {
+      for (const artist of musicData) {
+        for (const album of artist.albums) {
+          for (const song of album.songs) {
+            if (song.songName === songName) {
+              returnData.push({
+                songName: song.songName,
+                songId: song.songId
+              })
+              break
+            }
+          }
+        }
+      }
+    }
+    else if (albumName) {
+      for (const artist of musicData) {
+        for (const album of artist.albums) {
+          if (album.albumName === albumName) {
+            for (const song of album.songs) {
+              returnData.push({
+                songName: song.songName,
+                songId: song.songId
+              })
+            }
+            break
+          }
+        }
+      }
+    }
+    else {
+      for (const artist of musicData) {
+        if (artist.artistName === artistName) {
+          for (const album of artist.albums) {
+            for (const song of album.songs) {
+              returnData.push({
+                songName: song.songName,
+                songId: song.songId
+              })
+            }
+          }
+          break
+        }
+      }
+    }
+  } else {
+    for (const artist of musicData) {
+      for (const album of artist.albums) {
+        for (const song of album.songs) {
+          returnData.push({
+            songName: song.songName,
+            songId: song.songId
+          })
+        }
+      }
+    }
+  }
+  res.send(json.stringify(returnData))
 })
 
 app.post('/songs', (req, res) => {
