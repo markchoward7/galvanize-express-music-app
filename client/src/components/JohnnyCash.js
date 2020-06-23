@@ -50,7 +50,7 @@ const JohnnyCash = () => {
   const [cashList, setcashList] = useState("");
 
   let callcashList = (artistName) => {
-    fetch(`http://localhost:9000/70936`)
+    fetch(`http://localhost:9000/lookup/70936`)
       .then((res) => res.text())
       .then((res) => setcashList(JSON.parse(res)));
   };

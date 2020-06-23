@@ -50,7 +50,7 @@ const Beetles = () => {
   const [beetlesList, setbeetlesList] = useState(null);
 
   let callbeetlesList = (artistName) => {
-    fetch(`http://localhost:9000/136975`)
+    fetch(`http://localhost:9000/lookup/136975`)
       .then((res) => res.text())
       // .then(res => console.log(Array.isArray(JSON.parse(res))))
       .then((res) => setbeetlesList(JSON.parse(res)));
