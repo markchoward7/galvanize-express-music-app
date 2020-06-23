@@ -103,7 +103,7 @@ app.get('/', (req, res) => {
 app.get('/:artistId', (req, res) => {
   returnData = []
   for (const artist of musicData) {
-    if (artist.artistId === req.params.artistId) {
+    if (artist.artistId === Number(req.params.artistId)) {
       for (const album of artist.albums) {
         returnData.push({
           albumName: album.albumName,
@@ -120,9 +120,9 @@ app.get('/:artistId', (req, res) => {
 app.get('/:artistId/:albumId', (req, res) => {
     returnData = []
     for (const artist of musicData) {
-      if (artist.artistId === req.params.artistId) {
+      if (artist.artistId === Number(req.params.artistId)) {
         for (const album of artist.albums) {
-          if (album.albumId === req.params.albumId) {
+          if (album.albumId === Number(req.params.albumId)) {
             for (const song of album.songs) {
               returnData.push({
                 songName: song.songName,
@@ -141,11 +141,11 @@ app.get('/:artistId/:albumId', (req, res) => {
 app.get('/:artistId/:albumId/:songId', (req, res) => {
     returnData = []
     for (const artist of musicData) {
-      if (artist.artistId === req.params.artistId) {
+      if (artist.artistId === Number(req.params.artistId)) {
         for (const album of artist.albums) {
-          if (album.albumId === req.params.albumId) {
+          if (album.albumId === Number(req.params.albumId)) {
             for (const song of album.songs) {
-              if (song.songId === req.params.songId) {
+              if (song.songId === Number(req.params.songId)) {
                 returnData.push({
                   songName: song.songName,
                   songId: song.songId,
