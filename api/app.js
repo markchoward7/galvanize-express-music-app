@@ -1,46 +1,16 @@
-var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
 var fetch = require('node-fetch')
 
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
-// var testAPIRouter = require("./routes/testAPI");
-
 var app = express();
-
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-//app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-// app.use("/testAPI", testAPIRouter);
-
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
-
-// // error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
 
 var musicData = []
 fetch("https://itunes.apple.com/search?term=the+beatles").then(response => response.json()).then(data => {
@@ -68,6 +38,7 @@ function LoadAlbums(artist) {
         albumName: album.collectionName,
         albumId: album.collectionId,
         artworkUrl: album.artworkUrl100,
+        nextSongId: 0,
         songs: []
       }
       artist.albums.push(newAlbum)
@@ -83,6 +54,9 @@ function LoadSongs(album) {
         songId: song.trackId,
         previewUrl: song.previewUrl
       })
+      if (songId >= album.nextSongId) {
+        album.nextSongId = songId + 1
+      }
     }
   })
 }
@@ -233,11 +207,40 @@ app.get('/songs', (req, res) => {
 })
 
 app.post('/songs', (req, res) => {
-    // post a new song
+    for (const artist of musicData) {
+      if (artist.artistName === req.body.artistName) {
+        for (const album of artist.albums) {
+          if (album.albumName === req.body.albumName) {
+            album.songs.push({
+              songName: req.body.songName,
+              songId: album.nextSongId
+            })
+            album.nextSongId++
+          }
+        }
+      }
+    }
+    res.send(200)
 })
 
 app.delete('/:artistID/:albumID/:songID', (req, res) => {
-    // delete a song
+    for (const artist of musicData) {
+      if (artist.artistId === Number(req.params.artistId)) {
+        for (const album of artist.albums) {
+          if (album.albumId === Number(req.params.albumId)) {
+            for (const song of album.songs) {
+              if (song.id === Number(req.params.artistId)) {
+                album.splice(album.songs.indexOf(song), 1)
+                break
+              }
+            }
+            break
+          }
+        }
+        break
+      }
+    }
+    res.send(200)
 })
 
 module.exports = app;
