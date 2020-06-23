@@ -15,8 +15,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 500,
-    minWidth: 400,
+    minWidth: 500,
+    maxWidth: 700,
   },
   media: {
     height: 0,
@@ -50,13 +50,13 @@ const JohnnyCash = () => {
   const [cashList, setcashList] = useState("");
 
   let callcashList = (artistName) => {
-    fetch(`http://localhost:9000/songs?artist=${artistName}`)
+    fetch(`http://localhost:9000/70936`)
       .then((res) => res.text())
-      .then((res) => setcashList(res));
+      .then((res) => setcashList(JSON.parse(res)));
   };
 
   useEffect(() => {
-    callcashList("Johnny Cash");
+    callcashList();
   }, []);
 
   // END FETCH DATA SECTION
@@ -64,19 +64,17 @@ const JohnnyCash = () => {
   return (
     <Box style={{ display: "flex", justifyContent: "center" }}>
       <Card className={classes.root}>
-        <CardHeader title="Artist Name Here" subheader="Data Here" />
+        <CardHeader title="Johnny Cash" subheader="Data Here" />
         <CardMedia
           className={classes.media}
-          image="LINK_TO_IMAGE"
-          title="Album Title Here"
+          image="https://static.posters.cz/image/750/poster/johnny-cash-signature-i15080.jpg"
+          title="Album Here"
         />
-        {/* <CardContent>
+        <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
+            I shot a man in Reno just to watch him die. -Johnny Cash
           </Typography>
-        </CardContent> */}
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton
             className={clsx(classes.expand, {
@@ -91,7 +89,16 @@ const JohnnyCash = () => {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>{cashList}</Typography>
+            <Typography paragraph>
+              {Array.isArray(cashList) &&
+                cashList.map((ele) => (
+                  <div>
+                    <b>Album Name: </b>
+                    {ele.albumName}, <b>ID: </b>
+                    {ele.albumId}
+                  </div>
+                ))}
+            </Typography>
           </CardContent>
         </Collapse>
       </Card>

@@ -15,8 +15,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 500,
-    minWidth: 400,
+    minWidth: 500,
+    maxWidth: 700,
   },
   media: {
     height: 0,
@@ -47,36 +47,41 @@ const Beetles = () => {
 
   // FETCH DATA SECTION + UPDATE STATE
 
-  const [beetlesList, setbeetlesList] = useState("");
+  const [beetlesList, setbeetlesList] = useState(null);
 
   let callbeetlesList = (artistName) => {
-    fetch(`http://localhost:9000/songs?artist=${artistName}`)
+    fetch(`http://localhost:9000/136975`)
       .then((res) => res.text())
-      .then((res) => setbeetlesList(res));
+      // .then(res => console.log(Array.isArray(JSON.parse(res))))
+      .then((res) => setbeetlesList(JSON.parse(res)));
   };
 
   useEffect(() => {
-    callbeetlesList('The+Beatles');
+    callbeetlesList();
   }, []);
 
   // END FETCH DATA SECTION
 
   return (
-    <Box style={{ display: "flex", justifyContent: "center", marginBottom:"1rem" }}>
+    <Box
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: "1rem",
+      }}
+    >
       <Card className={classes.root}>
-        <CardHeader title="Artist Name Here" subheader="Data Here" />
+        <CardHeader title="The Beatles" subheader="Data Here" />
         <CardMedia
           className={classes.media}
-          image="LINK_TO_IMAGE"
+          image="https://cdn.britannica.com/18/136518-050-CD0E49C6/The-Beatles-Ringo-Starr-Paul-McCartney-George.jpg"
           title="Album Title Here"
         />
-        {/* <CardContent>
+        <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
+            "All we are saying is give peace a chance." ― John Lennon
           </Typography>
-        </CardContent> */}
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton
             className={clsx(classes.expand, {
@@ -92,8 +97,15 @@ const Beetles = () => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph>
-                {beetlesList}
-                </Typography>
+              {Array.isArray(beetlesList) &&
+                beetlesList.map((ele) => (
+                  <div>
+                    <b>Album Name: </b>
+                    {ele.albumName}, <b>ID: </b>
+                    {ele.albumId}
+                  </div>
+                ))}
+            </Typography>
           </CardContent>
         </Collapse>
       </Card>
