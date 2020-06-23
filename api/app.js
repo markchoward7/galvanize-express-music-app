@@ -73,7 +73,6 @@ function LoadAlbums(artist) {
       artist.albums.push(newAlbum)
       LoadSongs(newAlbum)
       }
-      console.log(`Loaded`)
     })
   }
 function LoadSongs(album) {
@@ -171,6 +170,7 @@ app.get('/songs', (req, res) => {
   returnData = []
   if (songName || albumName || artistName) {
     if (songName) {
+      songName = songName.replace("+", " ")
       for (const artist of musicData) {
         for (const album of artist.albums) {
           for (const song of album.songs) {
@@ -186,6 +186,7 @@ app.get('/songs', (req, res) => {
       }
     }
     else if (albumName) {
+      albumName = albumName.replace("+", " ")
       for (const artist of musicData) {
         for (const album of artist.albums) {
           if (album.albumName === albumName) {
@@ -201,6 +202,7 @@ app.get('/songs', (req, res) => {
       }
     }
     else {
+      artistName = artistName.replace("+", " ")
       for (const artist of musicData) {
         if (artist.artistName === artistName) {
           for (const album of artist.albums) {
