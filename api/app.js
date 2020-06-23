@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require("cors");
-var fetch = require("node-fetch")
+var fetch = require('node-fetch')
 
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -14,7 +14,7 @@ var app = express();
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('view engine', 'jade');
 
 app.use(cors());
 app.use(logger('dev'));
@@ -26,7 +26,7 @@ app.use(cookieParser());
 // app.use('/users', usersRouter);
 // app.use("/testAPI", testAPIRouter);
 
-// catch 404 and forward to error handler
+// // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   next(createError(404));
 // });
@@ -44,43 +44,50 @@ app.use(cookieParser());
 
 var musicData = []
 fetch("https://itunes.apple.com/search?term=the+beatles").then(response => response.json()).then(data => {
-  musicData.push({
+  newArtist = {
     artistName: data.results[0].artistName,
     artistId: data.results[0].artistId,
     albums: []
-  })
+  }
+  musicData.push(newArtist)
+  LoadAlbums(newArtist)
 })
 fetch("https://itunes.apple.com/search?term=johnny+cash").then(response => response.json()).then(data => {
-  musicData.push({
+  newArtist = {
     artistName: data.results[0].artistName,
     artistId: data.results[0].artistId,
     albums: []
-  })
+  }
+  musicData.push(newArtist)
+  LoadAlbums(newArtist)
 })
-for (const artist of musicData) {
-  fetch(`https://itunes.apple.com/lookup?id=${artist.artistId}&entity=album`).then(response => response.json().then(data => {
+function LoadAlbums(artist) {
+  fetch(`https://itunes.apple.com/lookup?id=${artist.artistId}&entity=album`).then(response => response.json()).then(data => {
     for (const album of data.results.slice(1)) {
-      artist.albums.push({
+      newAlbum = {
         albumName: album.collectionName,
         albumId: album.collectionId,
         artworkUrl: album.artworkUrl100,
         songs: []
-      })
-    }
-  }))
-  for (const album of artist.albums) {
-    fetch(`https://itunes.apple.com/search?attribute=albumTerm&term=${album.collectionName.replace(' ', '+')}&entity=song`).then(response => response.json()).then(data => {
-      for (const song of data.results) {
-        album.songs.push({
-          songName: song.trackName,
-          songId: song.trackId,
-          previewUrl: song.previewUrl
-        })
+      }
+      artist.albums.push(newAlbum)
+      LoadSongs(newAlbum)
       }
       console.log(`Loaded`)
     })
   }
+function LoadSongs(album) {
+  fetch(`https://itunes.apple.com/search?attribute=albumTerm&term=${album.albumName.replace(' ', '+')}&entity=song`).then(response => response.json()).then(data => {
+    for (const song of data.results) {
+      album.songs.push({
+        songName: song.trackName,
+        songId: song.trackId,
+        previewUrl: song.previewUrl
+      })
+    }
+  })
 }
+    
 
 app.get('/', (req, res) => {
   returnData = []
