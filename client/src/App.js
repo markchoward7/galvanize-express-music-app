@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import "fontsource-roboto";
+import Title from "./components/Title"
+import Search from "./components/Search"
+import Beetles from "./components/Beetles"
+import JohnnyCash from "./components/JohnnyCash";
 
 function App() {
   const [apiResponse, setapiResponse] = useState("");
@@ -18,18 +21,11 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className="App-intro">{apiResponse}</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Title />
+        {/* <p className="App-intro">{apiResponse} « Api Response is here!</p> */}
+      <Search />
+      <Beetles />
+      <JohnnyCash />
     </div>
   );
 }
