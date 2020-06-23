@@ -21,7 +21,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 //app.use('/', indexRouter);
 // app.use('/users', usersRouter);
@@ -74,6 +73,7 @@ function LoadAlbums(artist) {
       artist.albums.push(newAlbum)
       LoadSongs(newAlbum)
       }
+      console.log(`Loaded`)
     })
   }
 function LoadSongs(album) {
@@ -97,7 +97,7 @@ app.get('/', (req, res) => {
       artistId: artist.artistId
     })
   }
-  res.send(json.stringify(returnData))
+  res.send(JSON.stringify(returnData))
 })
 
 app.get('/:artistId', (req, res) => {
@@ -114,7 +114,7 @@ app.get('/:artistId', (req, res) => {
       break
     }
   }
-  res.send(json.stringify(returnData))
+  res.send(JSON.stringify(returnData))
 })
 
 app.get('/:artistId/:albumId', (req, res) => {
@@ -135,7 +135,7 @@ app.get('/:artistId/:albumId', (req, res) => {
         break
       }
     }
-    res.send(json.stringify(returnData))
+    res.send(JSON.stringify(returnData))
 })
 
 app.get('/:artistId/:albumId/:songId', (req, res) => {
@@ -160,13 +160,14 @@ app.get('/:artistId/:albumId/:songId', (req, res) => {
         break
       }
     }
-    res.send(json.stringify(returnData))
+    res.send(JSON.stringify(returnData))
 })
 
 app.get('/songs', (req, res) => {
   let songName = req.query.song
   let albumName = req.query.album
   let artistName = req.query.artist
+  console.log(req)
   returnData = []
   if (songName || albumName || artistName) {
     if (songName) {
@@ -226,7 +227,7 @@ app.get('/songs', (req, res) => {
       }
     }
   }
-  res.send(json.stringify(returnData))
+  res.send(JSON.stringify(returnData))
 })
 
 app.post('/songs', (req, res) => {
