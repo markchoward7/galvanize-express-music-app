@@ -55,17 +55,8 @@ const Beetles = () => {
       .then((res) => setbeetlesList(res));
   };
 
-  const [cashList, setcashList] = useState("");
-
-  let callcashList = (artistName) => {
-    fetch(`http://localhost:9000/songs?artist=${artistName}`)
-      .then((res) => res.text())
-      .then((res) => setcashList(res));
-  };
-
   useEffect(() => {
-    callbeetlesList('Beetles');
-    callcashList('Johnny Cash')
+    callbeetlesList('The+Beatles');
   }, []);
 
   // END FETCH DATA SECTION

@@ -13,7 +13,7 @@ var fetch = require("node-fetch")
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(cors());
@@ -21,27 +21,26 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 //app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 // app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 var musicData = []
 fetch("https://itunes.apple.com/search?term=the+beatles").then(response => response.json()).then(data => {
@@ -78,6 +77,7 @@ for (const artist of musicData) {
           previewUrl: song.previewUrl
         })
       }
+      console.log(`Loaded`)
     })
   }
 }
@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
       artistId: artist.artistId
     })
   }
-  res.send(json.stringify(returnData))
+  res.send(JSON.stringify(returnData))
 })
 
 app.get('/:artistId', (req, res) => {
@@ -107,7 +107,7 @@ app.get('/:artistId', (req, res) => {
       break
     }
   }
-  res.send(json.stringify(returnData))
+  res.send(JSON.stringify(returnData))
 })
 
 app.get('/:artistId/:albumId', (req, res) => {
@@ -128,7 +128,7 @@ app.get('/:artistId/:albumId', (req, res) => {
         break
       }
     }
-    res.send(json.stringify(returnData))
+    res.send(JSON.stringify(returnData))
 })
 
 app.get('/:artistId/:albumId/:songId', (req, res) => {
@@ -153,13 +153,14 @@ app.get('/:artistId/:albumId/:songId', (req, res) => {
         break
       }
     }
-    res.send(json.stringify(returnData))
+    res.send(JSON.stringify(returnData))
 })
 
 app.get('/songs', (req, res) => {
   let songName = req.query.song
   let albumName = req.query.album
   let artistName = req.query.artist
+  console.log(req)
   returnData = []
   if (songName || albumName || artistName) {
     if (songName) {
@@ -219,7 +220,7 @@ app.get('/songs', (req, res) => {
       }
     }
   }
-  res.send(json.stringify(returnData))
+  res.send(JSON.stringify(returnData))
 })
 
 app.post('/songs', (req, res) => {
