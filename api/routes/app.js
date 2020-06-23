@@ -1,6 +1,5 @@
 const express = require('express')
-
-const app = express()
+var router = express.Router();
 
 /*
     song object structure
@@ -20,23 +19,23 @@ const app = express()
     }
 */
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     // return [{artist1.name: url-to-albums}, {artist2.name: url-to-albums}]
 })
 
-app.get('/:artistId', (req, res) => {
+router.get('/:artistId', (req, res) => {
     // return [{album1.name: url-to-album}, {album2.name: url-to-album}]
 })
 
-app.get('/:artistId/:albumId', (req, res) => {
+router.get('/:artistId/:albumId', (req, res) => {
     // return [{song1.name: url-to-song}, {song2.name: url-to-song}]
 })
 
-app.get('/:artistId/:albumId/:songId', (req, res) => {
+router.get('/:artistId/:albumId/:songId', (req, res) => {
     // return {name: song-name, etc.}
 })
 
-app.get('/songs', (req, res) => {
+router.get('/songs', (req, res) => {
     // query params
         // song=    return {name: song-name, etc.}
         // album=   return [{song1.name: url-to-song}, {song2.name: url-to-song}] 
@@ -44,13 +43,12 @@ app.get('/songs', (req, res) => {
     // return [{song1.name: url-to-song}, {song2.name: url-to-song}]
 })
 
-app.post('/songs', (req, res) => {
+router.post('/songs', (req, res) => {
     // post a new song
 })
 
-app.delete('/:artistID/:albumID/:songID', (req, res) => {
+router.delete('/:artistID/:albumID/:songID', (req, res) => {
     // delete a song
 })
 
-const port = 3000
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
+module.export = router
