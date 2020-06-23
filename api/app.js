@@ -239,4 +239,4 @@ app.delete('/:artistID/:albumID/:songID', (req, res) => {
     res.send(200)
 })
 
-app.listen(3000)
+module.exports = app;
