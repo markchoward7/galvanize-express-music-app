@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import "fontsource-roboto";
 
 function App() {
   const [apiResponse, setapiResponse] = useState("");
@@ -19,7 +20,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p className="App-intro">;{apiResponse}</p>
+        <p className="App-intro">{apiResponse}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
