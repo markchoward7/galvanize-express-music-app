@@ -74,13 +74,12 @@ const Beetles = () => {
         <CardHeader title="The Beatles" subheader="Data Here" />
         <CardMedia
           className={classes.media}
-          image="LINK_TO_IMAGE"
+          image="https://cdn.britannica.com/18/136518-050-CD0E49C6/The-Beatles-Ringo-Starr-Paul-McCartney-George.jpg"
           title="Album Title Here"
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            “You may say I'm a dreamer, but I'm not the only one. I hope someday
-            you'll join us. And the world will live as one.” ― John Lennon
+            "All we are saying is give peace a chance." ― John Lennon
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -98,13 +97,14 @@ const Beetles = () => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph>
-              {Array.isArray(beetlesList) && beetlesList.map((ele) => (
-                <div>
-                  <b>Album Name: </b>
-                  {ele.albumName}, <b>ID: </b>
-                  {ele.albumId}
-                </div>
-              ))}
+              {Array.isArray(beetlesList) &&
+                beetlesList.map((ele) => (
+                  <div>
+                    <b>Album Name: </b>
+                    {ele.albumName}, <b>ID: </b>
+                    {ele.albumId}
+                  </div>
+                ))}
             </Typography>
           </CardContent>
         </Collapse>
